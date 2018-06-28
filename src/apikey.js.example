@@ -1,0 +1,3 @@
+export const apiKey = 'VAGALUME_API_KEY'
+
+//https://auth.vagalume.com.br/settings/api/
