@@ -66,17 +66,7 @@ export default {
       lyricsLength: 0
     };
   },
-  watch: {
-    lyricsArray: function(val) {
-      console.log(val.length);
-      let el = document.querySelector("html");
-      if (val.length == 0) {
-        el.style.height = "100%";
-      } else {
-        el.style.height = "";
-      }
-    }
-  },
+  watch: {},
   computed: {
     hasLyrics() {
       if (this.lyricsArray.length > 0) return true;
@@ -227,6 +217,16 @@ export default {
   },
   mounted() {
     this.getSpotifyMusic();
+  },
+  updated() {
+    let el = document.querySelector("html");
+    let hasVerticalScrollbar = el.scrollHeight > el.clientHeight;
+
+    if (hasVerticalScrollbar) {
+      el.style.height = "";
+    } else {
+      el.style.height = "100%";
+    }
   }
 };
 </script>
