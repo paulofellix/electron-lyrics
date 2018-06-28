@@ -46,6 +46,8 @@
 <script>
 var stringSimilarity = require("string-similarity");
 var shell = require("shelljs");
+var dbus = require("dbus-native");
+
 shell.config.execPath = "/usr/bin/node";
 
 export default {
@@ -90,29 +92,53 @@ export default {
     },
     getSpotifyMusic() {
       let vm = this;
-      let stdout = shell.exec("./sp metadata").stdout;
-      let aux = stdout.split("\n");
 
-      aux.forEach(element => {
-        let data = element.split("|");
-        switch (data[0]) {
-          case "album":
-            vm.musicData.album = data[1];
-            break;
-          case "artist":
-            vm.musicData.artist = data[1];
-            break;
-          case "title":
-            vm.musicData.title = data[1];
-            break;
-          case "artUrl":
-            vm.musicData.artUrl = data[1];
-            break;
-          default:
-            break;
+      var bus = dbus.sessionBus();
+      bus.invoke(
+        {
+          destination: "org.mpris.MediaPlayer2.spotify",
+          path: "/org/mpris/MediaPlayer2",
+          interface: "org.freedesktop.DBus.Properties",
+          member: "Get",
+          signature: "ss",
+          body: ["org.mpris.MediaPlayer2.Player", "Metadata"]
+        },
+        function(err, data) {
+          if (err) console.log(err);
+          else {
+            vm.musicData.artist = data[1][0][5][1][1][0][0];
+            vm.musicData.album = data[1][0][3][1][1][0];
+            vm.musicData.title = data[1][0][8][1][1][0];
+            vm.musicData.artUrl = data[1][0][2][1][1][0];
+            vm.getLyrics();
+          }
         }
-      });
-      this.getLyrics();
+      );
+
+      //Old Method using script
+
+      // let stdout = shell.exec("./sp metadata").stdout;
+      // let aux = stdout.split("\n");
+
+      // aux.forEach(element => {
+      //   let data = element.split("|");
+      //   switch (data[0]) {
+      //     case "album":
+      //       vm.musicData.album = data[1];
+      //       break;
+      //     case "artist":
+      //       vm.musicData.artist = data[1];
+      //       break;
+      //     case "title":
+      //       vm.musicData.title = data[1];
+      //       break;
+      //     case "artUrl":
+      //       vm.musicData.artUrl = data[1];
+      //       break;
+      //     default:
+      //       break;
+      //   }
+      // });
     },
     getLyrics() {
       let vm = this;

@@ -3,12 +3,14 @@ import App from './App.vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import {
-    ApiKey
-} from './apikey'
-
-Vue.use(VueAxios, axios)
+    apiKey as ApiKey
+}
+from './apikey';
 
 const apiKey = ApiKey
+
+
+Vue.use(VueAxios, axios)
 
 const app = new Vue({
     el: '#app',
