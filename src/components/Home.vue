@@ -2,15 +2,16 @@
     <div class="home">
         <div class="row">
             <div class="col-sm-2 offset-sm-1">
-                <img :src="musicData.artUrl" :alt="musicData.album" class="img-fluid">
+                <img :src="musicData.artUrl" :alt="musicData.album" class="img-fluid" @dblclick="getSpotifyMusic">
                 <br>
                 <br>
-                <h4 >{{musicData.artist}}</h4>
+                <h5 style="font-weight:bold">{{musicData.artist}}</h5>
+                <h5 style="color:#cecece">{{musicData.title}}</h5>
             </div>
             <div class="col-sm-8">
                 <div id="lyrics">
                     <div v-if="hasLyrics">
-                        <p v-html="lyric" v-for="lyric in lyricsArray"></p>    
+                        <p v-html="lyric" v-for="lyric in lyricsArray"></p>
                     </div>
                     <div v-else>
                     <p>     
@@ -65,6 +66,17 @@ export default {
       lyricsLength: 0
     };
   },
+  watch: {
+    lyricsArray: function(val) {
+      console.log(val.length);
+      let el = document.querySelector("html");
+      if (val.length == 0) {
+        el.style.height = "100%";
+      } else {
+        el.style.height = "";
+      }
+    }
+  },
   computed: {
     hasLyrics() {
       if (this.lyricsArray.length > 0) return true;
@@ -92,7 +104,7 @@ export default {
     },
     getSpotifyMusic() {
       let vm = this;
-
+      vm.clearData();
       var bus = dbus.sessionBus();
       bus.invoke(
         {
@@ -140,8 +152,20 @@ export default {
       //   }
       // });
     },
+    clearData() {
+      this.lyrics = "";
+      this.lyricsArray = [];
+      this.lyricsLength = 0;
+      this.musicData = {
+        artist: "",
+        album: "",
+        title: "",
+        artUrl: ""
+      };
+    },
     getLyrics() {
       let vm = this;
+
       let artist = vm.musicData.artist.replace("&", "%26");
       let title = vm.musicData.title.replace("&", "%26");
 
@@ -150,7 +174,9 @@ export default {
           `http://api.vagalume.com.br/search.artmus?q=${title}%20${artist}&apikey=${apiKey}`
         )
         .then(response => {
-          if (response.data.response.numFound == 0) return;
+          if (response.data.response.numFound == 0) {
+            return;
+          }
 
           let responseArray = response.data.response.docs.filter(element => {
             return element.title !== undefined;
@@ -166,6 +192,7 @@ export default {
               musId = element.id;
           });
 
+          if (musId == undefined) return;
           this.$http
             .get(
               `http://api.vagalume.com.br/search.php?musid=${musId}&extra=alb&apikey=${apiKey}`
@@ -186,13 +213,14 @@ export default {
 
               if (vm.lyricsLength < 1000) {
                 elLyrics.style.columnCount = 1;
-              } else if (vm.lyricsLength > 1000 && vm.lyricsLength < 1800) {
+              } else if (vm.lyricsLength > 1000) {
                 elLyrics.style.columnCount = 2;
-              } else if (vm.lyricsLength >= 1800 && vm.lyricsLength < 2500) {
-                elLyrics.style.columnCount = 3;
-              } else {
-                elLyrics.style.columnCount = 4;
               }
+              // else if (vm.lyricsLength >= 1800 && vm.lyricsLength < 2500) {
+              //   elLyrics.style.columnCount = 3;
+              // } else {
+              //   elLyrics.style.columnCount = 4;
+              // }
             });
         });
     }
