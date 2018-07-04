@@ -51,6 +51,7 @@
     "electron-compile": "^6.4.3",
     "electron-devtools-installer": "^2.2.4",
     "electron-squirrel-startup": "^1.0.0",
+    "q": "^1.5.1",
     "shelljs": "^0.8.2",
     "string-similarity": "^1.2.0",
     "vue": "^2.5.16",
@@ -61,6 +62,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "electron-forge": "^5.2.2",
-    "electron-prebuilt-compile": "2.0.3"
+    "electron-prebuilt-compile": "2.0.3",
+    "path": "^0.12.7"
   }
 }

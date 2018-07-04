@@ -8,6 +8,9 @@ import installExtension, {
 import {
   enableLiveReload
 } from 'electron-compile';
+var path = require('path')
+
+const electron = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -18,23 +21,34 @@ const isDevMode = process.execPath.match(/[\\/]electron/);
 if (isDevMode) enableLiveReload();
 
 const createWindow = async () => {
+  let width = 1000
+  let height = 700
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 700,
-    // fullscreen: true,
-    center: true,
-    fullscreenWindowTitle: true
-    // fullscreen: true
+    width: width,
+    height: height,
+    icon: path.join(__dirname, 'assets/icons/256x256.png'),
+    show: false,
   });
+
+  mainWindow.maximize()
+  mainWindow.setMenu(null)
+
+  let primaryDisplaySize = electron.screen.getPrimaryDisplay().size
+
+  let x, y;
+  x = (primaryDisplaySize.width - width) / 2
+  y = (primaryDisplaySize.height - height) / 2
+  mainWindow.setPosition(x, y)
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.show();
 
   // Open the DevTools.
   if (isDevMode) {
     await installExtension(VUEJS_DEVTOOLS);
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
   }
 
   // Emitted when the window is closed.
