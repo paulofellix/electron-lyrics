@@ -12,7 +12,7 @@
     "lint": "echo \"No linting configured\""
   },
   "keywords": [],
-  "author": "paulo",
+  "author": "Paulo Félix",
   "license": "MIT",
   "config": {
     "forge": {
@@ -24,6 +24,7 @@
           "zip"
         ],
         "linux": [
+          "deb",
           "rpm"
         ]
       },
@@ -36,8 +37,8 @@
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
       "github_repository": {
-        "owner": "",
-        "name": ""
+        "owner": "paulofellix",
+        "name": "electron-lyrics"
       },
       "windowsStoreConfig": {
         "packageName": "",
