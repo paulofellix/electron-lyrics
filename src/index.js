@@ -9,6 +9,7 @@ import {
   enableLiveReload
 } from 'electron-compile';
 var path = require('path')
+const isDev = require('electron-is-dev');
 
 const electron = require('electron')
 
@@ -46,9 +47,9 @@ const createWindow = async () => {
   mainWindow.show();
 
   // Open the DevTools.
-  if (isDevMode) {
+  if (isDev) {
     await installExtension(VUEJS_DEVTOOLS);
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
   }
 
   // Emitted when the window is closed.

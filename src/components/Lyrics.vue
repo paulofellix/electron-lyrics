@@ -1,13 +1,13 @@
 <template>
     <div class="lyrics">
-        <div v-if="translatedLyricsArray.length > 0">
+        <div v-if="translatedLyricsArray.length > 1">
           <h3 class="translate" v-if="!isTranslated" @click="changeLanguage">Traduzir</h3>
           <h3 class="translate" v-else @click="changeLanguage">Original</h3>
         </div>
         <div v-else-if="searching">
           <h3>Searching...</h3>
         </div>
-        <div v-else>
+        <div v-if="lyricsNotFound">
           <h3>Lyrics not found!</h3>
         </div>
         <div>
@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     getLyrics() {
-      // debugger
+      
       let vm = this;
 
       let artist = vm.musicData.artist.replace("&", "%26");
@@ -151,6 +151,7 @@ export default {
       }
 
       vm.lyricsShow = vm.originalLyricsArray
+      vm.searching = false;
     },
     clearData(){
       this.lyrics.original = ''
