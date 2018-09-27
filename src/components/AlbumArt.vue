@@ -11,6 +11,9 @@
 
 <script>
 import Player from "./Player";
+
+import { EventBus } from "../event-bus.js";
+
 export default {
   name: "AlbumArt",
   components: {
